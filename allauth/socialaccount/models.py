@@ -20,17 +20,27 @@ from .fields import JSONField
 
 class SocialAppManager(models.Manager):
     def get_current(self, provider, request=None):
+        # split the url to get string "reselller=Ecometrica"
+        parse_request = request.GET['next'].split('&')[-1]
+
+        # split again to get reseller name in list  ['reseller', 'Ecometrica']
+        reseller_name = parse_request.split('=')[-1]
         cache = {}
         if request:
             cache = getattr(request, "_socialapp_cache", {})
             request._socialapp_cache = cache
         app = cache.get(provider)
         if not app:
+<<<<<<< HEAD
             if allauth.app_settings.SITES_ENABLED:
                 site = get_current_site(request)
                 app = self.get(sites__id=site.id, provider=provider)
             else:
                 app = self.get(provider=provider)
+=======
+            site = get_current_site(request)
+            app = self.get(sites__id=site.id, provider=provider, name=reseller_name)
+>>>>>>> PRODUCT-8375 Customise the querying for social auth
             cache[provider] = app
         return app
 
