@@ -21,7 +21,7 @@ from .fields import JSONField
 class SocialAppManager(models.Manager):
     def get_current(self, provider, request=None):
 
-        # Get reseller name which is set in the cookie, 
+        # Get reseller name which is set in the cookie,
         # for querying for sso
         reseller_name = request.COOKIES['reseller']
         cache = {}
