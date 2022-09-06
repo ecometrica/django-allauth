@@ -20,11 +20,10 @@ from .fields import JSONField
 
 class SocialAppManager(models.Manager):
     def get_current(self, provider, request=None):
-        # split the url to get string "reselller=Ecometrica"
-        parse_request = request.GET['next'].split('&')[-1]
 
-        # split again to get reseller name in list  ['reseller', 'Ecometrica']
-        reseller_name = parse_request.split('=')[-1]
+        # Get reseller name which is set in the cookie, 
+        # for querying for sso
+        reseller_name = request.COOKIES['reseller']
         cache = {}
         if request:
             cache = getattr(request, "_socialapp_cache", {})
