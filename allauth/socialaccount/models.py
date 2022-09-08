@@ -20,7 +20,6 @@ from .fields import JSONField
 
 class SocialAppManager(models.Manager):
     def get_current(self, provider, request=None):
-
         # Get reseller name which is set in the cookie,
         # for querying for sso
         reseller_name = request.COOKIES['reseller']
@@ -30,16 +29,8 @@ class SocialAppManager(models.Manager):
             request._socialapp_cache = cache
         app = cache.get(provider)
         if not app:
-<<<<<<< HEAD
-            if allauth.app_settings.SITES_ENABLED:
-                site = get_current_site(request)
-                app = self.get(sites__id=site.id, provider=provider)
-            else:
-                app = self.get(provider=provider)
-=======
             site = get_current_site(request)
             app = self.get(sites__id=site.id, provider=provider, name=reseller_name)
->>>>>>> PRODUCT-8375 Customise the querying for social auth
             cache[provider] = app
         return app
 
