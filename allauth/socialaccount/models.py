@@ -22,6 +22,9 @@ from .fields import JSONField
 
 class SocialAppManager(models.Manager):
     def get_current(self, provider, request=None):
+        # get reseller name from cookie,
+        # use to query the relevant sso
+        reseller_name = request.COOKIES['reseller']
         cache = {}
         if request:
             cache = getattr(request, "_socialapp_cache", {})
@@ -29,7 +32,7 @@ class SocialAppManager(models.Manager):
         app = cache.get(provider)
         if not app:
             site = get_current_site(request)
-            app = self.get(sites__id=site.id, provider=provider)
+            app = self.get(sites__id=site.id, provider=provider, name=reseller_name)
             cache[provider] = app
         return app
 
